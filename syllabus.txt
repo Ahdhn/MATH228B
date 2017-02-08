@@ -1,0 +1,47 @@
+Instructor:
+   Office:
+   Email:
+   Phone:
+   Office Hours:
+Professor Bob Guy
+MSB 2136
+guy@math.ucdavis.edu
+754-9201
+TBA
+
+
+Textbook:
+R. J. LeVeque. Finite Difference Methods for Ordinary and Partial Differential Equations: Steady-State and Time-Dependent Problems. SIAM, 2007.
+
+
+Webpage:
+http://www.math.ucdavis.edu/~guy/teaching/228b/
+Homework and announcements will be posted here.
+
+
+Class:
+MWF 2:10-3:00 in BAINER 1134
+
+
+
+Homework
+You are encouraged to talk with your classmates about homework problems. However, you must do your own write-up and write your own codes. All aspects of your write up must be clearly presented. Your writing should be clear and grammatically correct. Your codes must be thoroughly commented. All tables and figures must be appropriately labeled. You will be graded on the quality of your presentation. 
+
+
+What we will cover
+This coarse is part of the sequence 228A-C on numerical methods for partial differential equations. The second quarter (228B) will focus on time dependent problems. The topics we will cover this quarter are listed below. 
+Introduction (Fourier transforms, derivation of conservation laws, parabolic and hyperbolic PDEs)
+Numerical ODEs (briefly)
+Stability, accuracy, and convergence
+Von Neumann analysis
+Diffusion (reaction-diffusion) equation in multiple dimensions
+Nonrectangular geometry (logically quadrilateral grids and embedded grids)
+Methods for advection equation in 1D
+Dissipation and dispersion, modified equations
+Hyperbolic conservation laws
+Godunov method, wave propagation, and high-resolution methods
+Grading
+Your grade will be based on your homework assignments.  We will likely have 4 or 5 homework assignments during this quarter.
+
+Programming
+This class will require writing computer programs. You may use any language. If you do not have a strong preference of language, it is recommended that you use MATLAB, because it is easy to use and very powerful.  All codes will be turned in and must be thoroughly commented. 

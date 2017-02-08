@@ -1,0 +1,131 @@
+\section{Problem No.1}
+\subsection{Problem Description:} 
+Consider the advection equation
+$$
+u_{t}+ au_{x}=0
+$$
+on the interval $[0,1)$ with periodic boundary conditions. Space is discretized as $x_{j}=j\Delta x$ for $j=0...N-1$, so that $\Delta x=\frac{1}{N}$. Descretize the spatial derivative with the second-order centered difference operator.
+
+\begin{enumerate}
+\item For simplicity, assume $N$ is odd. The eigenvectors of the centered difference operator are
+$$
+v_{j}^{k} = exp(2\pi jkx_{j})
+$$
+for $k=\frac{-(N-1)}{2}...\frac{(N-1)}{2}$. Compute the eigenvalues.
+\item Derive a time step restriction on a method-of-lines approach which uses classical fourth-order Runge-Kutta for time stepping.
+\end{enumerate}
+
+\subsection{Solution:}\label{sec:prob1_sol}
+\paragraph{Eigenvalues:}
+The periodic boundary condition is expressed as 
+$$
+u(0,t) = u (1,t) 
+$$
+which physically means that whatever flows out at the outflow boundary flows back in at the inflow boundary (assuming $a>0$)\cite{hoffmann2000computational}. Thus we have $u_0(t)=u_{n-1}(t)$, which contributes as a single unknown($u_{n-1}(t)$). Using the centered difference operator for spatial derivative, we get 
+$$
+u_{j}^{\prime}(t) = \frac{-a}{2\Delta x}(u_{j+1}(t)-u_{j-1}(t))
+$$
+\vspace{2mm}
+
+For $j=1\longrightarrow u_{1}^{\prime}(t)=\frac{-a}{2\Delta x}(u_{2}(t)-u_{0}(t))$ 
+\vspace{2mm}
+
+or $j=1\longrightarrow u_{1}^{\prime}(t)=\frac{-a}{2\Delta x}(u_{2}(t)-u_{n-1}(t))$ 
+\vspace{2mm}
+
+For $j=2\longrightarrow u_{2}^{\prime}(t)=\frac{-a}{2\Delta x}(u_{3}(t)-u_{1}(t))$ 
+\vspace{2mm}
+
+And so forth, till we reach $i=n-1$
+
+For $i=n\longrightarrow u_{n-1}^{\prime}(t)=\frac{-a}{2\Delta x}(u_{1}(t)-u_{n-2}(t))$ 
+\vspace{2mm}
+
+The system of linear equations can be written in the following form
+
+\[
+\left| 
+\begin{array}{c}
+u_{1}^{\prime}(t) \\
+u_{2}^{\prime}(t) \\
+u_{3}^{\prime}(t) \\
+...\\
+...\\
+...\\
+u_{n-2}^{\prime}(t) \\
+u_{n-1}^{\prime}(t) \\
+\end{array} 
+\right|
+=
+\left| 
+\begin{array}{ccc ccccc}
+0       & \alpha  & 0      & 0      & ... & ... & 0 & -\alpha \\
+-\alpha & 0       & \alpha & 0      & ... & ... & 0 & 0 \\
+0       & -\alpha & 0      & \alpha & ... & ... & 0 & 0\\
+... & ... & ... & ... & ... & ... & ... & ...\\
+... & ... & ... & ... & ... & ... & ... & ...\\
+... & ... & ... & ... & ... & ... & ... & ...\\
+0 & 0 & ... & ... & 0 & -\alpha & 0       & \alpha\\
+\alpha & 0 & ... & ... & 0 & 0       & -\alpha & 0\\
+\end{array} 
+\right|
+\left| 
+\begin{array}{c}
+u_{1}(t) \\
+u_{2}(t) \\
+u_{3}(t) \\
+...\\
+...\\
+...\\
+u_{n-2}(t) \\
+u_{n-1}(t) \\
+\end{array} 
+\right|
+\] 
+
+where $\alpha = \frac{-a}{2\Delta x}$. We notice that A is \emph{skew-symmetric} since $A_{T}=-A$, and thus its eigenvalues are pure imaginary \cite{leveque2007finite}. Additionally, the nonzero eigenvalues come in pairs, each the negation of the other. 
+The eigenvalues of the matrix can be derived by assuming that $u_{j}(t)$ take the form $e^{i\zeta x_{j}}$, where $\zeta$ is the wave number and $i=\sqrt{-1}$. By substituting into the discretized equation, it becomes 
+$$
+u_{j}^{\prime}(t) = \frac{-a}{2\Delta x}(e^{i\zeta (x_{j}+\Delta x)}-e^{i\zeta (x_{j}-\Delta x)}) = \frac{-a}{2\Delta x}e^{i\zeta x_{j}}(e^{i\zeta \Delta x}-e^{-i\zeta \Delta x})
+\\
+u_{j}^{\prime}(t) = \frac{-a}{2\Delta x}e^{i\zeta x_{j}}2isin(\zeta \Delta x)=\frac{-a}{\Delta x}e^{i\zeta x_{j}}isin(\zeta \Delta x)
+$$
+The wave number can be written as $\zeta=2\pi k$. Thus,
+$$
+u_{j}^{\prime}(t) = \frac{-ia}{\Delta x}sin(2\pi k \Delta x)u_{j}(t)
+$$
+Thus, the eigenvalues of the matrix are
+$$
+\lambda_{k} = -\frac{ia}{\Delta x}sin(2\pi k \Delta x), \;\; k=1,2,.... n-1
+$$
+
+
+\paragraph{Stability Restrictions:}
+To derive the stability restriction, we start by expressing the advection equation as $u_{\prime}(t)=\lambda u(t)$, where $\lambda$ is the eigenvalue. After applying the descritization method (fourth-order Runge-Kutta), we obtain $U^{n+1}=R(z)U^{n}$, such that $R(z)$ is some function of $z=\lambda\Delta t$. $R(z)$ is a polynimal for explicit methods and rational for implicit methods \cite{leveque2007finite}. Then, the range of absolute stability will be 
+
+$\mathcal{S}={z\in \mathbb{C} : |R(z)|\leq 1}$
+
+We start with applying the fourth-order Runge-Kutta method on the advection equation. We obtain
+$$
+U^{n+1} = U^{n} + \frac{\Delta t}{6}[f(Y_{1},t_{n})+2f(Y_{2},t_{n}+\frac{\Delta t}{2})+2f(Y_{3},t_{n}+\frac{\Delta t}{2})+f(Y_{4},t_{n}+\Delta t)]
+$$
+such that 
+$$
+Y_{1}=U^{n}
+\\
+Y_{2}=U^{n}+\frac{1}{2}\Delta t f(Y_{1},t_{n})
+\\
+Y_{3}=U^{n}+\frac{1}{2}\Delta t f(Y_{2},t_{n}+\frac{\Delta t}{2})
+\\
+Y_{4}=U^{n}+\Delta t f(Y_{3},t_{n}+\frac{\Delta t}{2})
+$$
+The full derivation can be found in the Appendix. We obtain at the end 
+$$
+U^{n+1} = U^{n}[1+z+\frac{1}{2}z^{2}+\frac{1}{6}z^{3}+\frac{1}{24}z^{4}]
+$$ 
+
+From the definition of absolute stability introduced earlier, we have the following restriction 
+$$
+|1+z+\frac{1}{2}z^{2}+\frac{1}{6}z^{3}+\frac{1}{24}z^{4}| \leq 1
+$$
+The above equation should give the restriction over the time step by substituing $z=\lambda \Delta t$. 

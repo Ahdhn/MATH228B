@@ -1,0 +1,49 @@
+\section*{Appendix}
+We derive here the function $R(z)$ for the advection equation under the classical fourth-order Runge-Kutta method (mentioned in Section \ref{sec:prob1_sol}).
+
+Starting with the definition of fourth-order Runge-Kutta scheme: 
+$$
+U^{n+1} = U^{n} + \frac{\Delta t}{6}[f(Y_{1},t_{n})+2f(Y_{2},t_{n}+\frac{\Delta t}{2})+2f(Y_{3},t_{n}+\frac{\Delta t}{2})+f(Y_{4},t_{n}+\Delta t)]
+$$
+such that 
+$$
+Y_{1}=U^{n}
+\\
+Y_{2}=U^{n}+\frac{1}{2}\Delta t f(Y_{1},t_{n})
+\\
+Y_{3}=U^{n}+\frac{1}{2}\Delta t f(Y_{2},t_{n}+\frac{\Delta t}{2})
+\\
+Y_{4}=U^{n}+\Delta t f(Y_{3},t_{n}+\frac{\Delta t}{2})
+$$
+
+where $\Delta t$ is the time step. We first expand each value of $Y$ term, such that 
+
+$$
+Y_{1}=U^{n}
+\\
+Y_{2}=U^{n}+\frac{1}{2}\Delta t f(U^{n},t_{n})
+\\
+Y_{3}=U^{n}+\frac{1}{2}\Delta t f(U^{n}+\frac{1}{2}\Delta t f(U^{n},t_{n}),t_{n}+\frac{\Delta t}{2})
+\\
+Y_{4}=U^{n}+\Delta t f(U^{n}+\frac{1}{2}\Delta t f(U^{n}+\frac{1}{2}\Delta t f(U^{n},t_{n}),t_{n}+\frac{\Delta t}{2}),t_{n}+\frac{\Delta t}{2})
+$$
+
+Since $f(U,t)$ is a function of $U$, we can drop $t$. Additionally, each of these functions can be expressed in terms of eigenvalue $\lambda$. By substituting in fourth-order Runge-Kutta equation, we obtain 
+$$
+U^{n+1} = U^{n} + \frac{\Delta t}{6}[\lambda U^{n}+ 2\lambda U^{n} + \lambda^{2}U^{n}\Delta t + 2 \lambda U^{n} + 
+\\ \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \quad \Delta t \lambda^{2}U^{n} + \frac{1}{2}\Delta t^{2}\lambda^{3}U^{n} +U^{n}\lambda + \Delta t\lambda^{2}U^{2} + \frac{1}{2}\Delta t^{2}\lambda^{3}U^{n} + \frac{1}{4}\lambda^{4}\Delta t^{3}U^{n} ]
+$$
+
+$$
+U^{n+1} = U^{n}[1+\lambda \Delta t + \frac{1}{2} \lambda^{2}\Delta t^{2} + \frac{1}{6} \Delta t^{3}\lambda^{3}+\frac{1}{24} \Delta t^{4}\lambda^{4}]
+$$
+
+But we have $z=\lambda\Delta t$. Thus, 
+
+$$
+U^{n+1} = U^{n}[1+z + \frac{1}{2} z^{2} + \frac{1}{6} z^{3}+\frac{1}{24} z^{4}]
+$$
+
+Thus,
+
+$$R(z)=1+z + \frac{1}{2} z^{2} + \frac{1}{6} z^{3}+\frac{1}{24} z^{4}$$
