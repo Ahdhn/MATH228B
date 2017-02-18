@@ -10,7 +10,7 @@ to time t=1 using forward Euler and \cn. For \protect{\cn} use a fixed time step
 \begin{enumerate}
 \item Time your codes for different grid and compare the time to solve using forward Euler and \cn. 
 \item In theory, how should the time scale as the grid is refined for each algorithm? How did the time scale with the gird size in practice?
-\item For this problem we could use and FFT-based Poisson solver which will perform the direct solve in $\mathcal{O}(Nlog(N))$, where $N$ is the total number of grid points. We could also use multigrid and perform the solve in $\mathcal{O}(N)$ time. How should the time scale as the grid is refined for \protect{\cn} if we used an $\mathcal{O}$ solver? 
+\item For this problem we could use and FFT-based Poisson solver which will perform the direct solve in $\mathcal{O}(Nlog(N))$, where $N$ is the total number of grid points. We could also use multigrid and perform the solve in $\mathcal{O}(N)$ time. How should the time scale as the grid is refined for \protect{\cn} if we used an $\mathcal{O}(N)$ solver? 
 \end{enumerate}
 
 \subsection{Solution:}
@@ -44,7 +44,9 @@ to time t=1 using forward Euler and \cn. For \protect{\cn} use a fixed time step
    
 \paragraph{Part 2:} With \protect{\cn}, the system of equations is banded matrix which can be solved using LU-decomposition \cite{press1987numerical} which has complexity of $\mathcal{O}(N^2)$ for $N$ unknowns. For this problem, the number of unknowns at each time step is $N_{x}-2 \times N_{y}-2$, where $N_{x}$ and $N_{y}$ is the number of grid points in x and y direction respectively. Thus, it is expected for the banded matrix solver (and thus for \protect{\cn} scheme) to be of order $\mathcal{O}(N^2)$. For the explicit forward Euler scheme, the number of operations is of order of the number of unknowns. Thus, the complexity is of order $\mathcal{O}(N^2)$ for forward Euler. 
 
-At first glance, this may suggest that both methods have equal complexity when doing refinement study. But there is hidden overhead with forward Euler due to its stability criterion as we have to perform temporal refinement as we do spatial refinement. In contrast to \protect{\cn} which is unconditionally stable. For forward Euler, the method is only stable only when $\frac{\Delta t}{\Delta x^{2}} \leq \frac{1}{4}$. Since we take time steps just below the stability limit, the complexity of forward Euler at each time step increases to be $\mathcal{O}(N^{4})$. For \protect{\cn}, we double both $N_{x}$ and $N_{y}$ at a time. Thus moving from one refinement level to another would exhibit a 4 times increase in time. 
+There is hidden overhead with forward Euler due to its stability criterion as we have to perform temporal refinement as we do spatial refinement. In contrast to \protect{\cn} which is unconditionally stable. For forward Euler, the method is only stable only when $\frac{\Delta t}{\Delta x^{2}} \leq \frac{1}{4}$. Since we take time steps just below the stability limit, the complexity of forward Euler at each time step increases to be $\mathcal{O}(N^{4})$. Thus if we double the space steps ($N_{x}$ and $N_{y}$) we should exhibit 16 times increase in time. For \protect{\cn}, doubling the space steps would give the same increase in time. 
 
-The slope of the curve in Figure \ref{fig:time} is 3.4 for both schemes which deviates by $15\%$ from the what is expected. 
+The slope of the curve in Figure \ref{fig:time} is 3.4 for both schemes which deviates by a factor of $15\%$ from the what is expected. For \protect{\cn}, this could be justified since we don't go through the LU-decomposition of the banded matrix at every solution step. Instead, half the work done once (finding the pivot), and the other half of the work is solved per time step (backward and forward substitution). For forward Euler, it is not clear why such deviation occurs. 
 
+
+\paragraph{Part 4:} Using a $\mathcal{O}(N)$ solver, the time scale will be four for \protect{\cn} since no temporal refinement is needed given the same reasoning we give for a $\mathcal{O}(N^{2})$ solver.

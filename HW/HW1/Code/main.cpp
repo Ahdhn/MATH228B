@@ -20,18 +20,18 @@ inline void PrintOut(string outputfilename,double**U,size_t n_t,size_t n_x,doubl
 	//print out the U array (U at all time in different sections) in a txt file
 	//to be used for plotting
 
-	ofstream file(outputfilename,ios::out);
+	ofstream file(outputfilename, ios::out);
 	file.precision(10);
-	size_t t,i;
-	double x,time;
-	file << n_x << " " << n_t << endl;	
-	for(t=0;t<n_t;t++){
-		time=t*del_t;	
-		for(i=0;i<n_x;i++){
-			x=i*del_x;
-			file<<U[t][i]<<" ";
+	size_t t, i;
+	double x, time;
+	file << n_x << " " << n_t << endl;
+	for (t = 0; t<n_t; t++){
+		time = t*del_t;
+		for (i = 0; i<n_x; i++){
+			x = i*del_x;
+			file << U[t][i] << " ";
 		}
-		file<<endl;
+		file << endl;
 	}
 }
 
