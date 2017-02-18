@@ -1,0 +1,112 @@
+\newpage
+Now, we are going to expand the equation for different values of $i$ and $j$ for $1\leq i \leq nx-2$ and $1\leq j \leq ny-2$, where $nx$ and $ny$ is the number of grid points in x and y direction respectively. Notice that the boundary conditions are applied on $i=0$,$j=0$,$i=nx-1$, and $j=ny-1$. 
+
+For $j=1$ and $i=1$
+$$
+\alpha u_{1,1}^{n+1} + \beta u_{2,1}^{n+1} + \beta u_{1,2}^{n+1} = D_{1,1}^{n} - \beta u_{1,0}^{n+1} - \beta u_{0,1}^{n+1}
+$$
+
+For $j=1$ and $i=2$
+$$
+\alpha u_{2,1}^{n+1} + \beta u_{3,1}^{n+1} + \beta u_{1,1}^{n+1} + \beta u_{2,2}^{n+1} = D_{2,1}^{n} - \beta u_{2,0}^{n+1}
+$$
+and so on till we reach to $i=nx-2$
+$$
+\alpha u_{nx-2,1}^{n+1} + \beta u_{nx-3,1}^{n+1} + \beta u_{nx-2,2}^{n+1} = D_{nx-2,1}^{n} - \beta u_{nx-1,1}^{n+1} -\beta u_{nx-2,0}^{n+1} 
+$$
+
+%===============
+$$
+\alpha u_{i,j}^{n+1} + \beta u_{i+1,j}^{n+1} + \beta u_{i-1,j}^{n+1} + \beta u_{i,j+1}^{n+1} + \beta u_{i,j-1}^{n+1} = D_{i,j}^{n}
+$$
+%===============
+
+For $j=2$ and $i=1$
+$$
+\alpha u_{1,2}^{n+1} + \beta u_{2,2}^{n+1} + \beta u_{1,3}^{n+1} + u_{1,1}^{n+1} = D_{i,j}^{n} - \beta u_{0,2}^{n+1}
+$$
+For $j=2$ and $i=2$
+$$
+\alpha u_{2,2}^{n+1} + \beta u_{3,2}^{n+1} + \beta u_{1,2}^{n+1} + \beta u_{2,3}^{n+1} + \beta u_{2,1}^{n+1} = D_{2,2}^{n}
+$$
+and so on till we reach to $i=nx-2$
+$$
+\alpha u_{nx-2,2}^{n+1} + \beta u_{nx-3,2}^{n+1} + \beta u_{nx-2,3}^{n+1} + \beta u_{nx-2,1}^{n+1} = D_{nx-2,2}^{n} - \beta u_{nx-1,2}^{n+1} 
+$$
+The process repeats till we reach $j=ny-2$, for which we will have for $i=1$
+$$
+\alpha u_{1,ny-2}^{n+1} + \beta u_{2,ny-2}^{n+1}  + \beta u_{1,ny-3}^{n+1} = D_{1,ny-2}^{n}- \beta u_{0,ny-2}^{n+1} - \beta u_{1,ny-1}^{n+1}
+$$
+For $i=2$
+
+$$
+\alpha u_{2,ny-2}^{n+1} + \beta u_{3,ny-2}^{n+1}+ \beta u_{1,ny-2}^{n+1} + \beta u_{2,ny-3}^{n+1} = D_{2,ny-2}^{n}-\beta u_{2,ny-1}^{n+1}
+$$
+
+and so on till $i=nx-2$
+$$
+\alpha u_{nx-2,ny-2}^{n+1} + \beta u_{nx-3,ny-2}^{n+1} + \beta u_{nx-2,ny-3}^{n+1} = D_{nx-2,ny-2}^{n}- \beta u_{nx-1,ny-2}^{n+1} - \beta u_{nx-2,ny-1}^{n+1}
+$$
+Now we group these equation in a matrix system such that $A.x=b$, where $A$ is a square matrix of size $(nx-2\times ny-2) \times (nx-2\times ny-2)$
+
+
+
+
+
+$$
+j=1, i=1\\
+\alpha u_{1,1}^{n+1} + \beta (u_{2,1}^{n+1} + u_{1,2}^{n+1}) = D_{1,1}^{n} - \beta(u_{1,0}^{n+1} - u_{0,1}^{n+1})\\
+j=1, i=2\\
+\alpha u_{2,1}^{n+1} + \beta (u_{3,1}^{n+1} + u_{1,1}^{n+1} +u_{2,2}^{n+1}) = D_{2,1}^{n} - \beta(u_{2,0}^{n+1})\\
+j=1, i=3\\
+\alpha u_{3,1}^{n+1} + \beta (u_{4,1}^{n+1} + u_{2,1}^{n+1} +u_{3,2}^{n+1}) = D_{3,1}^{n} - \beta(u_{3,0}^{n+1})\\
+j=1, i=4\\
+\alpha u_{4,1}^{n+1} + \beta (u_{5,1}^{n+1} + u_{3,1}^{n+1} +u_{4,2}^{n+1}) = D_{4,1}^{n} - \beta(u_{4,0}^{n+1})\\
+j=1, i=5\\
+\alpha u_{5,1}^{n+1} + \beta ( u_{4,1}^{n+1} +u_{5,2}^{n+1}) = D_{1,5}^{n} - \beta(u_{1,0}^{n+1} - u_{6,1}^{n+1})\\
+\\
+j=2, i=1\\
+\alpha u_{1,2}^{n+1} + \beta (u_{2,2}^{n+1} +u_{1,3}^{n+1} + u_{1,1}^{n+1}) = D_{1,2}^{n} - \beta u_{0,2}^{n+1}\\
+j=2, i=2\\
+\alpha u_{2,2}^{n+1} + \beta (u_{3,2}^{n+1} + u_{1,2}^{n+1} +u_{2,3}^{n+1} + u_{2,1}^{n+1}) = D_{2,2}^{n}\\
+j=2, i=3\\
+\alpha u_{3,2}^{n+1} + \beta (u_{4,2}^{n+1} + u_{2,2}^{n+1} +u_{3,3}^{n+1} + u_{3,1}^{n+1}) = D_{3,2}^{n}\\
+j=2, i=4\\
+\alpha u_{4,2}^{n+1} + \beta (u_{5,2}^{n+1} + u_{3,2}^{n+1} +u_{4,3}^{n+1} + u_{4,1}^{n+1}) = D_{4,2}^{n}\\
+j=2, i=5\\
+\alpha u_{5,2}^{n+1} + \beta (u_{4,2}^{n+1} +u_{5,3}^{n+1} + u_{5,1}^{n+1}) = D_{5,2}^{n} -\beta u_{6,2}^{n+1}\\
+\\
+j=3, i=1\\
+\alpha u_{1,3}^{n+1} + \beta (u_{2,3}^{n+1} +u_{1,4}^{n+1} + u_{1,2}^{n+1}) = D_{i,3}^{n} - \beta  u_{0,3}^{n+1}\\
+j=3, i=2\\
+\alpha u_{2,3}^{n+1} + \beta (u_{3,3}^{n+1} + u_{1,3}^{n+1} +u_{2,4}^{n+1} + u_{2,2}^{n+1}) = D_{2,3}^{n}\\
+j=3, i=3\\
+\alpha u_{3,3}^{n+1} + \beta (u_{4,3}^{n+1} + u_{2,3}^{n+1} +u_{3,4}^{n+1} + u_{3,2}^{n+1}) = D_{3,3}^{n}\\
+j=3, i=4\\
+\alpha u_{4,3}^{n+1} + \beta (u_{5,3}^{n+1} + u_{3,3}^{n+1} +u_{4,4}^{n+1} + u_{4,2}^{n+1}) = D_{4,3}^{n}\\
+j=3, i=5\\
+\alpha u_{5,3}^{n+1} + \beta (u_{4,3}^{n+1} +u_{5,4}^{n+1} + u_{5,2}^{n+1}) = D_{5,3}^{n} -\beta u_{6,3}^{n+1} \\
+$$
+\newpage
+$$
+j=4, i=1\\
+\alpha u_{1,4}^{n+1} + \beta (u_{2,4}^{n+1} + u_{1,5}^{n+1} + u_{1,3}^{n+1}) = D_{1,4}^{n} -\beta u_{0,4}^{n+1}\\
+j=4, i=2\\
+\alpha u_{2,4}^{n+1} + \beta (u_{3,4}^{n+1} + u_{1,4}^{n+1} +u_{2,5}^{n+1} + u_{2,3}^{n+1}) = D_{2,4}^{n}\\
+j=4, i=3\\
+\alpha u_{3,4}^{n+1} + \beta (u_{4,4}^{n+1} + u_{2,4}^{n+1} +u_{3,5}^{n+1} + u_{3,3}^{n+1}) = D_{3,4}^{n}\\
+j=4, i=4\\
+\alpha u_{4,4}^{n+1} + \beta (u_{5,4}^{n+1} + u_{3,4}^{n+1} +u_{4,5}^{n+1} + u_{4,3}^{n+1}) = D_{4,4}^{n}\\
+j=4, i=5\\
+\alpha u_{5,4}^{n+1} + \beta ( u_{4,4}^{n+1} +u_{5,5}^{n+1} + u_{5,3}^{n+1}) = D_{5,4}^{n} -\beta u_{6,4}^{n+1}\\
+j=5, i=1\\
+\alpha u_{1,5}^{n+1} + \beta (u_{2,5}^{n+1} + u_{i,4}^{n+1}) = D_{i,5}^{n} - \beta (u_{i,6}^{n+1} + u_{0,5}^{n+1})\\
+j=5, i=2\\
+\alpha u_{2,5}^{n+1} + \beta (u_{3,5}^{n+1} + u_{1,5}^{n+1} + u_{2,4}^{n+1}) = D_{2,5}^{n} - \beta u_{2,6}^{n+1}\\
+j=5, i=3\\
+\alpha u_{3,5}^{n+1} + \beta (u_{4,5}^{n+1} + u_{2,5}^{n+1} + u_{3,4}^{n+1}) = D_{3,5}^{n} - \beta u_{3,6}^{n+1}\\
+j=5, i=4\\
+\alpha u_{4,5}^{n+1} + \beta (u_{5,5}^{n+1} + u_{3,5}^{n+1} + u_{4,4}^{n+1}) = D_{4,5}^{n} - \beta u_{4,6}^{n+1}\\
+j=5, i=5\\
+\alpha u_{5,5}^{n+1} + \beta (u_{4,5}^{n+1} + u_{5,4}^{n+1}) = D_{5,5}^{n} - \beta (u_{5,6}^{n+1}+u_{6,5}^{n+1})\\
+$$

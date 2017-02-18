@@ -1,2 +1,69 @@
 \section{Problem No.1}
 \subsection{Problem Description:} 
+Consider the forward time, centered space discretization 
+$$
+\frac{u_{j}^{n+1} -u_{j}^{n}}{\Delta t} + a\frac{u_{j+1}^{n} -u_{j-1}^{n}}{2\Delta x}=b\frac{u_{j-1}^{n} -2u_{j}^{n} +u_{j+1}^{n} }{\Delta x^{2}}
+$$
+to the convection-diffusion equation 
+$$
+u_{t} + au_{x} = bu_{xx}, \;\; b>0
+$$
+\begin{enumerate}
+\item Let $\nu=a\Delta t/\Delta x $ and $\mu = b\Delta t/\Delta x^{2}$. Since the solution of the PDE does not grow in time, it seems reasonable to require that the numerical solution not grow in time. Use von Neumann analysis to show that the numerical solution does not grow (in 2-norm) if and only if $\nu^{2}\leq 2 \mu \leq 1$
+\item Suppose that we use the mixed implicit-explicit scheme 
+$$
+\frac{u_{j}^{n+1}-u_{j}^{n}}{\Delta t} + a\frac{u_{j+1}^{n}-u_{j-1}^{n}}{2\Delta x} = b\frac{u_{j-1}^{n+1}-2u_{j}^{n+1}+u_{j+1}^{n+1} }{2\Delta x^{2}}
+$$
+Use von Neumann analysis to derive a stability restriction on the time step.
+\end{enumerate}
+
+\subsection{Solution:} 
+\paragraph{Part 1:} Using von Neumann analysis, we start by assuming that the solution at a grid point $U_{j}^{n} = e^{i\zeta \Delta j}$, where $\zeta$ is the wave number and $i=\sqrt{-1}$. Thus, the solution at $U_{j}^{n+1} = g(\zeta) e^{i\zeta \Delta j}$, where $g(\zeta)$ is the amplification factor at the wave number $\zeta$. Showing that the numerical solution does not grow (in 2-norm) means that we should derive that restrictions for $|g(\zeta)|^{2}\leq 1.0$.
+
+Substituting in the equation, we obtain
+
+$$
+g(\zeta)e^{ij\zeta\Delta x} - e^{ij\zeta\Delta x} + \frac{\nu}{2}(e^{i(j+1)\zeta\Delta x} -e^{i(j-1)\zeta\Delta x}) = \mu (e^{i(j-1)\zeta\Delta x} -2e^{ij\zeta\Delta x}+e^{i(j+1)\zeta\Delta x}) \;\;\;\;\;\;    (1)
+$$
+
+Dividing by $e^{ij\zeta\Delta x}$, using geometric identity and rearranging, we obtain 
+$$
+g(\zeta) = 1 - \nu j sin(\zeta \Delta x) + 2\mu(cos(\zeta \Delta x)-1)= 1-4\mu sin^{2}(\theta) - 2\nu j sin(\theta)cos(\theta)
+$$
+where $\theta = \frac{\zeta \Delta x}{2}$.  This complex number has modulus as
+$$
+|g(\zeta)|^{2} =  (1 -4\mu sin^{2}(\theta))^{2} + 4\nu^{2} sin^{2}(\theta)cos^{2}(\theta)\\
+|g(\zeta)|^{2} =  1 + 16\mu^{2} sin^{4}(\theta) - 8\mu sin^{2}(\theta) + 4\nu^{2} sin^{2}(\theta)cos^{2}(\theta)\\
+|g(\zeta)|^{2} =  1 + 4sin^{2}(\theta)( 4\mu^{2} sin^{2}(\theta) -2\mu+\nu^{2}cos^{2}(\theta))\\
+|g(\zeta)|^{2} =  1 + 4sin^{2}(\theta)( 4\mu^{2} sin^{2}(\theta) -2\mu+\nu^{2}(1-sin^{2}(\theta)))\\
+|g(\zeta)|^{2} =  1 + 4sin^{2}(\theta)( (4\mu^{2}-\nu^{2}) sin^{2}(\theta) -2\mu+\nu^{2} )\\
+$$
+The stability requirement suggests that $|g(\zeta)|^{2}\leq 1$. Thus, 
+$$
+|g(\zeta)|^{2} =  1 + 4sin^{2}(\theta)( (4\mu^{2}-\nu^{2}) sin^{2}(\theta) -2\mu+\nu^{2} ) \leq 1 \\
+(4\mu^{2}-\nu^{2}) sin^{2}(\theta) -2\mu+\nu^{2}\leq 0 \\
+sin^{2}(\theta)\leq  \frac{2\mu-\nu^{2}}{4\mu^{2}-\nu^{2}}\\
+$$
+We know that $sin^{2}(\theta)$ is bounded between $[0-1]$. So, we check the two extreme cases and from which we can obtain bounds over $\mu$ and $\nu$. For $sin^{2}(\theta)=0$, we get $\nu^{2} \leq 2\mu$. For $sin^{2}(\theta)=1$, we get $2\mu \leq1$. Thus, the numerical solution does not grow (in 2-norm) iff $\nu^{2}\leq s\mu\leq1$.
+
+\paragraph{Part 2:}
+Following the same approach, we can reuse equation (1) while doing the necessary changes over the time step on the right hand side as follows
+$$
+g(\zeta)e^{ij\zeta\Delta x} - e^{ij\zeta\Delta x} + \frac{\nu}{2}(e^{i(j+1)\zeta\Delta x} -e^{i(j-1)\zeta\Delta x}) =\\
+\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\;\; \mu (g(\zeta)e^{i(j-1)\zeta\Delta x} -2g(\zeta)e^{ij\zeta\Delta x} + g(\zeta)e^{i(j+1)\zeta\Delta x})
+$$
+After dividing by $e^{ij\zeta\Delta x}$, using geometric identity and rearranging, we obtain 
+$$
+g(\zeta)(1-2\mu (cos(\zeta \Delta x)-1)) = 1 -i\nu sin(\zeta \Delta x)
+g(\zeta) = \frac{1 -i2\nu sin(\theta)cos(\theta)}{1+4\mu sin^{2}(\theta)}
+$$
+where $\theta = \frac{\zeta \Delta x}{2}$. The complex number has modulus as 
+$$
+|g(\zeta)|^{2} = \frac{1+4\nu^{2}sin^{2}(\theta)cos^{2}(\theta)}{1+8\mu sin^{2}(\theta) + 16\mu^{2}sin^{4}(\theta)}
+$$
+Applying the stability requirements, such that $|g(\zeta)|^{2}\leq 1$, we obtain
+$$
+\nu^{2}cos^{2}(\theta) \leq 2\mu + 4\mu^{2}sin^{2}(\theta)=2\mu + 4\mu^{2}(1-cos^{2}(\theta)) \\
+cos^{2}(\theta) \leq \frac{2\mu+4\mu^{2}}{\nu^{2}+4\mu^{2}}
+$$
+Since $0\leq  cos^{2}(\theta)  \leq 1$, we can check these two bounds to get the stability restrictions. For $ cos^{2}(\theta) = 0$, we obtain restriction such that $-1\leq 2\mu$. For $ cos^{2}(\theta) = 1$, we get $\nu^{2}\leq 2\mu$. The second restriction implies that the first one is preserved. Thus, the final restriction we get is $\nu^{2}\leq 2\mu$. Further, we can substitute by the values of $\nu$ and $\mu$ to get the time step restriction. Thus, the time step restriction is $\Delta t \leq \frac{2b}{a^{2}}$.

@@ -1,1 +1,22 @@
 \section*{Appendix}
+Construction of the penta-diagonal system raised in \protect{\cn} scheme when used to solve the 2D heat equation. The system will be derived for the heat equation in Section \ref{sec:prob2} with the same initial and boundary conditions. We start by applying the trapezoidal rule on the following equation
+$$
+u_{t} = \Delta u = u_{xx}+u_{yy} \;\; on \;\; \Omega = (0,1) \times (0,1) \\
+$$
+We obtain
+$$
+\frac{u_{i,j}^{n+1}-u_{i,j}^{n}}{\Delta t} = \frac{1}{2}(\frac{u_{i+1,j}^{n+1} -2u_{i,j}^{n+1}+u_{i-1,j}^{n+1}}{(\Delta x)^{2}}+\frac{u_{i,j+1}^{n+1} -2u_{i,j}^{n+1}+u_{i,j-1}^{n+1}}{(\Delta y)^{2}}+\\
+\qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \qquad \frac{u_{i+1,j}^{n} -2u_{i,j}^{n}+u_{i-1,j}^{n}}{(\Delta x)^{2}}+\frac{u_{i,j+1}^{n} -2u_{i,j}^{n}+u_{i,j-1}^{n}}{(\Delta y)^{2}})
+$$
+
+For simplicity, we assume $\Delta x = \Delta y$. After rearranging the above equation we get
+$$
+(1+2r)u_{i,j}^{n+1} - \frac{r}{2} (u_{i+1,j}^{n+1} + u_{i-1,j}^{n+1} +u_{i,j+1}^{n+1} + u_{i,j-1}^{n+1}) = \\
+\qquad \qquad \qquad \qquad \qquad \qquad (1-2r)u_{i,j}^{n} + \frac{r}{2} (u_{i+1,j}^{n} + u_{i-1,j}^{n} +u_{i,j+1}^{n} + u_{i,j-1}^{n})
+$$
+where $r = \frac{\Delta t}{\Delta x^{2}}$. Additionally, we can write the equation in more compact way as 
+
+$$
+\alpha u_{i,j}^{n+1} + \beta (u_{i+1,j}^{n+1} + u_{i-1,j}^{n+1} +u_{i,j+1}^{n+1} + u_{i,j-1}^{n+1}) = D_{i,j}^{n}
+$$
+where $D_{i,j}^{n} = \gamma u_{i,j}^{n} - \beta (u_{i+1,j}^{n} + u_{i-1,j}^{n} +u_{i,j+1}^{n} + u_{i,j-1}^{n})$, $\alpha = 1+2r$, $\beta = -\frac{r}{2}$ and $\gamma = 1-2r$. 
