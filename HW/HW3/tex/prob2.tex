@@ -1,0 +1,25 @@
+\section{Problem No.2} \label{sec:prob2}
+\subsection{Problem Description:} 
+The FirzHugh-Nagumo equations 
+$$
+\frac{\partial v}{\partial t} = D\Delta v = (a-v)(v-1)v - w+I
+\frac{\partial w}{\partial t} = \epsilon (v-\gamma w)
+$$
+are used in electrophysiology to model the cross membrane electrical potential (voltage) in cardiac tissue and in neurons. Assuming that the spatial coupling is local and passive results the term which looks like the diffusion of voltage. The state variable are the voltage $v$ and recovery variable $w$.
+\begin{enumerate}
+\item Write a program to solve the FirzHugh-Nagumo equation on the unit square with homogeneous Neumann boundary conditions for $v$ (meaning electrically insulated). Use a fractional step method to handle the diffusion and reactions separately. Use an ADI method for diffusion solve. Describe what ODE solver oyou used for the reactions and what fractional stepping you chose. 
+\item Use the following parameters $a=0.1, \gamma =2, \epsilon=0.005, I=0, D=5.10^{-5}$, and initial conditions 
+$$
+v(x,y,0)=exp(-100(x^{2}+y^{2}))
+w(x,y,0)=0.0
+$$
+Note that $v=0, w=0$ is a stable stead state of the system. Call this the rest state. For these initial conditions the voltage has been raised above in the bottom corner of the domain. Generate a numerical solution up to time $t=300$. Visualize the voltage and describe the solution. Pick space and time steps to resolve the spatiotemporal dynamics of the solution you see. Discuss what the grid size and time step you used and why. 
+\item Use the same parameters from part (2), but use the initial conditions 
+$$
+v(x,y,0) = 1-2x
+w(x,y,0) = 0.05y
+$$
+and run the simulation until time t=600. Show the voltage at several points in time (pseudocolor plot, contour plot, or surface plot $z=V(x,y,t)$) and describe the solution. 
+\end{enumerate}
+\subsection{Solution:}
+\paragraph{Part 1:} 

@@ -1,0 +1,34 @@
+\section{Problem No.1} \label{sec:prob2}
+\subsection{Problem Description:} 
+
+Consider 
+$$
+u_{t} =0.1 \Delta u \; \; on \; \;  \Omega = (0,1) \times (0,1)\\
+\frac{\partial u}{\partial \overrightarrow{n}} = 0 \; \; on  \; \; \partial \Omega \\
+u(x,y,0) = exp(-10((x-0.3)^2 +(y-0.4)^2))
+$$
+Write a program to solve this PDE using the Peaceman-Rachford ADI scheme on a cell-centered grid. Use a direct solver for the tridiagonal systems. In a cell-centered discretization the solution is stored at the grid points $(x_{i},y_{i}) = (\Delta x(i-0.5), \Delta x(j-0.5))$ for $i,j=1...N$ and $dx=\frac{1}{N}$. This discretization is natural for handling Neumann boundary conditions, and it is often used to discretize conservation laws. At the grid points adjacent to the boundary, the one-dimensional discrete Laplacian for homogeneous Neumann boundary conditions is 
+$$
+u_{xx}(x_{1}) \approx \frac{-u_{1}+u_{2}}{\Delta x^{2}}
+$$
+\begin{enumerate}
+\item Perform a refinment study to show that your numerical solution is second-order accurate is space and time (refine time and space simultaneously using $\Delta t = \Delta x$) at time $t=1$.
+\item Time your code for different grid sizes. Show how the computational time scales with the gird size. Compare your timing results with those from the previous homework assignment for \cn. If you had error in your codes from HW2, fix them.
+
+Note, many of you are using script languages (MATLAB and python), and loops in these languages can be slow. You can program a single time step of ADI (in 2D) without any loops. For example, you can solve $LU=F$, where $U$ and $F$ are stored as arrays rather than vectors, and $L$ is the 1D operator to invert. Avoiding loops is not necessary for this assignment. Write your code for correctness and clarity first, and efficiency later if you have time.
+\item Show that the spatial integral of the solution of the PDE does not change in time. That is 
+
+$$
+\frac{d}{dt} \int_{\Omega} u dV=0
+$$
+\item Show that the solution to the discrete equations satisfies the discrete conservation property 
+$$
+\sum_{i,j} u_{i,j}^{n} = \sum_{i,j}u_{i,j}^{0}
+$$
+for all $n$. Demonstrate this property with your code. 
+
+
+\end{enumerate}
+
+\subsection{Solution:} 
+\paragraph{Part 1:}
