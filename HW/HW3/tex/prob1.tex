@@ -70,18 +70,18 @@ Since we are using cell-centered grid, the numerical solution extends from $\fra
    \label{fig:sol}
 \end{figure} 
 
-\paragraph{Refinement Study:} we used a similar approach as in homework 1 to carry on the refinement study. We start we certain time and space steps and calculate the sum of the solution all over the grid points. Next, we halve the time and space steps and get the sum. We then calculate the error as the absolute difference between the normalized sum of two successive solution. We then plot the total number of gird points Vs. the error on a log-log scale as shown in Figure \ref{fig:ref}. The slope of the line is $\approx 2.0$ which indicates that the scheme used in second order accurate in space and time. 
+\paragraph{Refinement Study:} we used a similar approach as in homework 1 to carry on the refinement study. We start we certain time and space steps and calculate the sum of the solution all over the grid points. Next, we halve the time and space steps and get the sum. We then calculate the error as the absolute difference between the normalized sum of two successive solution. We then plot the total number of gird points Vs. the error on a log-log scale as shown in Figure \ref{fig:ref}(a). The slope of the line is $\approx 2.0$ which indicates that the scheme is second order accurate in space and time. 
 	
 \begin{figure}[tbh]
  \centering  
    \subfloat [Refinement Study]{\includegraphics[width=0.4\linewidth]{fig/p1/ref.pdf}}
    \subfloat [Timing Comparison]{\includegraphics[width=0.4\linewidth]{fig/p1/timing.pdf}}
-  \caption{Refinement study (left) shows that ADI is second order accurate in time and space. Timing comparison (right) shows the order of computational time scale for ADi, CN and Forward Euler.}
+  \caption{Refinement study (left) shows that ADI is second order accurate in time and space. Timing comparison (right) shows the order of computational time scale for ADI, CN and Forward Euler.}
    \label{fig:ref}
 \end{figure} 
 
 \paragraph{Part 2:}
-We performed a comparison between the ADI, \protect{\cn} and Forward Euler where time spacing is fixed to 0.01. The results are shown in Figure \ref{fig:ref} (b) on a log-log scale between $\Delta x$ and time in milliseconds. It is found that for small gird size, using \protect{\cn} is more efficient. But after a certain limit ($\approx 64 \times 64 grid points$), ADI becomes more superior. This is due to the fact that ADI solve a tridiagonal system which is faster to solve than the banded matrix solver for \protect{\cn}, specially that the traditional matrix solver was optimized to take in constants (not array in C++) since the value of a single diagonal are the same. 
+We performed a comparison between the ADI, \protect{\cn} and Forward Euler where time spacing is fixed to 0.01. The results are shown in Figure \ref{fig:ref}(b) on a log-log scale between $\Delta x$ and time in milliseconds. It is found that for small gird size, using \protect{\cn} is more efficient. But after a certain limit ($\approx 64 \times 64$ grid points), ADI becomes more superior. This is due to the fact that ADI solve a tridiagonal system which is faster to solve than the banded matrix solver for \protect{\cn}, specially that the traditional matrix solver was optimized to take in constants (not array in C++) since the value of a single diagonal are the same. 
 
 
 \paragraph{Part 3:}
@@ -204,7 +204,7 @@ $$
 $$
 We conclude that this equality holds for $\sum_{i,j}U_{i,j}^{0} = \sum_{i,j}U_{i,j}^{n}$ as well. 
 
-We used the code to verify this above by printing the summation of the solution at all gird points for different intermediate time steps (with fixed $nx$ and $ny$). The results shown in Table \ref{tab:sum} agrees with our proof. 
+We used the code to verify the above statement by printing the summation of the solution at all gird points for different intermediate time steps (with fixed $nx$ and $ny$). The results shown in Table \ref{tab:sum} agrees with our proof. 
 
 \begin{table*}[h!]
 \centering
@@ -230,5 +230,5 @@ Time & $\sum_{i,j}U_{i,j}$  \\
  1 & 1111.666239  \\
 \end{tabular}
 \caption{Summing the solution over all grid points for different time steps (fixed $nx$ and $ny$)}
-\label{sum}
+\label{tab:sum}
 \end{table*}
