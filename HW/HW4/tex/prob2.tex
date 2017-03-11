@@ -1,0 +1,15 @@
+\section{Problem No.2} \label{sec:prob2}
+\subsection{Problem Description:} 
+For solving the heat equation we frequently use \protect{\cn}, which is trapezoidal rule time integration with a second-order space discretization. The analogous scheme for the linear advection equation is 
+$$
+u_{j}^{n+1} - u_{j}^{n} + \frac{\nu}{4}(u_{j+1}^{n}-u_{j-1}^{n}) + \frac{\nu}{4}(u_{j+1}^{n+1}-u_{j-1}^{n+1}) =0,
+$$
+where $\nu = \frac{a\Delta t}{\Delta x}$
+\begin{enumerate}
+\item Use von Neumann analysis to show that this scheme is unconditionally stable and that $||u^{n}||_{2} = ||u^{0}||_{2}$. This scheme is said to be non-dissipative - i.e. there is no amplitude error. This seems reasonable because this is a property of the PDE.
+\item Solve the advection equation on the periodic domain $[0,1]$ with the initial condition from problem 1 (part 2). Show the solution and comment on your results.
+\item Compute the relative phase error as $arg(\frac{g(\theta)}{-\nu \theta})$, where $g$ is the amplification factor and $\theta=\zeta \Delta t$, and plot it for $\theta \in [0,\pi]$. How does the relative phase error and lack of amplitude error relate to the numerical solutions you observed in part 2. 
+\end{enumerate}
+
+\subsection{Solution:}
+\paragraph{Part 1:}
