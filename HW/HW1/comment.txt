@@ -1,0 +1,1 @@
+Question 1 is reasonable but fails to obtain the final bound on the timestep. Question 2 is good, but fails to separate the space and time refinement studies. Question 3 is quite good, including a surface plot approach to displaying the solution behavior.

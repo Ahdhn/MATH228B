@@ -9,8 +9,8 @@
 #include <string> 
 #include <algorithm>
 #define PI 3.14159265359
-
-
+#include <Eigen\Dense>
+using namespace Eigen;
 size_t SCHEME_ID;
 size_t IC_ID;
 
@@ -29,9 +29,7 @@ void PrintOut(std::string outputfilename, double*U, size_t n_x, double del_x)
 }
 
 double func(double x)
-{
-	
-	
+{	
 	//return sin(x*(2.0*PI));	
 	return cos(2.0*x*PI) + sin(6.0*x*PI) / 2.0; 
 }
@@ -50,7 +48,7 @@ inline void ImposeBoundaryCondition(size_t n_x, double del_x, double*U, bool smo
 	else{
 		for (size_t i = 0; i < n_x; i++){
 			double x = double(i)*del_x;
-			if (x - 0.5 < 0.25){
+			if (abs(x - 0.5) < 0.25){
 				U[i] = 1;
 			}
 			else{
@@ -65,12 +63,12 @@ void Upwinding(double**U, double a, size_t n_x, double del_x, double del_t, size
 {
 	//Solve the 1d advection equation using the upwinding scheme with periodic boundary conditions 
 	//a is the speed 
-	double courant = a*del_t / del_x;
-	double courant_min = 1 - courant ;
+	double courant = (a*del_t) / del_x;	
 	if (courant>1.0){
 		std::cout << "Error (0) at Upwinding()::WARNING::Courant Number >1.0 and the scheme is unstable now!!!" << std::endl;
 		system("pause");
 	}
+	double courant_min = 1 - courant;
 	size_t n_plus = 1; 
 	size_t n = 0;
 	for (size_t t = 0; t < max_t; t++){
@@ -97,7 +95,7 @@ void LaxWendroff(double**U, double a, size_t n_x, double del_x, double del_t, si
 	size_t n = 0;
 
 	double i_term = 1.0 - ((a*a*del_t*del_t) / (del_x*del_x)); 
-	double i_mins_term = ((a*del_t) / (2.0*del_x)) + ((a*a*del_t*del_t) / (2.0*del_x*del_x)); 
+	double i_mins_term = (( a*del_t) / (2.0*del_x)) + ((a*a*del_t*del_t) / (2.0*del_x*del_x)); 
 	double i_plus_term = ((-a*del_t) / (2.0*del_x)) + ((a*a*del_t*del_t) / (2.0*del_x*del_x));
 
 	for (size_t t = 0; t < max_t; t++){
@@ -114,35 +112,116 @@ void LaxWendroff(double**U, double a, size_t n_x, double del_x, double del_t, si
 		std::swap(n, n_plus);
 	}
 }
-void CN_like(double**U, double a, size_t n_x, double del_x, double del_t, size_t max_t)
+
+inline void Decomp(size_t n_x, double alfa, double gamma, double beta, double*l, double*Mu)
 {
-	//Solve the 1d advection equation using the the CN-like scheme with periodic boundary conditions 
-	//a is the speed 
-		
-	size_t n_plus = 1;
-	size_t n = 0;
+	//decompose the tri-dia matrix into two matrices
+	//http://www.math.buffalo.edu/~pitman/courses/mth437/na2/node3.html
+	//http://www.math.buffalo.edu/~pitman/courses/mth437/na2/node4.html
 
-	double i_term = 1.0 - ((a*a*del_t*del_t) / (del_x*del_x));
-	double i_mins_term = ((a*del_t) / (2.0*del_x)) + ((a*a*del_t*del_t) / (2.0*del_x*del_x));
-	double i_plus_term = ((-a*del_t) / (2.0*del_x)) + ((a*a*del_t*del_t) / (2.0*del_x*del_x));
+	l[1] = alfa;
+	for (size_t i = 2; i<n_x - 1; i++){
+		Mu[i - 1] = gamma / l[i - 1];
+		l[i] = alfa - beta*Mu[i - 1];
+	}
+}
+inline void Solv(size_t n_x, double*b, double beta, double*l, double*Mu, double*z, double*&X)
+{
+	//solve the decomposed matirces 
 
-	for (size_t t = 0; t < max_t; t++){
-		for (size_t i = 0; i < n_x; i++){
-			U[n_plus][i] = U[n][i] * i_term;
-
-			if (i == 0){ U[n_plus][i] += i_mins_term*U[n][n_x - 1]; }
-			else{ U[n_plus][i] += i_mins_term*U[n][i - 1]; }
-
-			if (i == n_x - 1){ U[n_plus][i] += i_plus_term*U[n][0]; }
-			else{ U[n_plus][i] += i_plus_term*U[n][i + 1]; }
-
-		}
-		std::swap(n, n_plus);
+	z[1] = b[1] / l[1];
+	for (size_t i = 2; i<n_x - 1; i++){
+		z[i] = (b[i] - beta*z[i - 1]) / l[i];
 	}
 
+	X[n_x - 2] = z[n_x - 2];
+	for (size_t i = n_x - 3; i >= 1; i--){
+		X[i] = z[i] - Mu[i] * X[i + 1];
+	}
 }
-int main (int argc, char *argv[])
+void SolveSys(int n, double A, double B, double C, double*b, double*x)
 {
+	//solving the square (n X n) tri-diagonla system with A as the main diagonal
+	//C is the sub-diagona and B is the super diagonal
+	//There is a C in the top right corner of the materix
+	//and a B in the bottom left corner 
+	//A B 0 0 0 C 
+	//C A B 0 0 0 
+	//0 C A B 0 0 
+	//0 0 C A B 0 
+	//0 0 0 C A B 
+	//B 0 0 0 C A
+	//b is the right hand side array
+	//x is the unknown array
+	
+	//move data 
+	MatrixXf A_mat(n, n);	
+	for (int i = 0; i < n; i++){
+		for (int j = 0; j < n; j++){
+			if (i == j){ 
+				A_mat(i, j) = A; 
+			}
+			else if (i - j == -1){
+				A_mat(i, j) = B; 
+			}
+			else if (j - i == -1){
+				A_mat(i, j) = C; 
+			}
+			else{
+				A_mat(i, j) = 0; 
+			}
+		}
+	}
+	A_mat(0, n - 1) = C;
+	A_mat(n - 1, 0) = B; 
+
+	VectorXf b_vec(n);
+	VectorXf x_vec(n);
+	for (int i = 0; i < n; i++){ 
+		b_vec(i) = b[i]; 
+		x_vec(i) = 0;
+	}		
+
+	x_vec = A_mat.colPivHouseholderQr().solve(b_vec);
+
+
+	for (int i = 0; i < n; i++){		
+		x[i] = x_vec(i);
+	}	
+}
+inline void CrankNicolson(double**U, double a, size_t n_x, double del_x, double del_t, size_t max_t)
+{
+	//solving using Crank Nicolson's Scheme	
+	//solving the tri-dia matix using the LU-decomposition method 
+	//http://www.math.buffalo.edu/~pitman/courses/mth437/na2/node2.html
+	//https://people.sc.fsu.edu/~jburkardt/classes/gateway_2014/lecture_week03.pdf
+
+	//no need to declare the matix entities in vectors/arraies since they are all constants
+	
+	double courant = (a*del_t) / del_x;
+	double A(1), B(courant*0.25), C(-courant*0.25);//tri-dia entities
+	double* b = new double[n_x];
+	size_t n_plus(1), n(0);	
+
+	for (size_t t = 0; t < max_t; t++){ 
+		//set up the RHS
+		for (size_t i = 0; i < n_x; i++){ 			
+			b[i] = U[n][i];
+			if (i == 0){ b[i] += courant *0.25*U[n][n_x - 1]; }
+			else{ b[i] += courant *0.25*U[n][i - 1]; }
+			if (i == n_x - 1){ b[i] -= courant *0.25*U[n][0]; }
+			else{ b[i] -= courant *0.25*U[n][i + 1]; }		
+		}
+		SolveSys(n_x, A, B, C, b, U[n_plus]);
+		std::swap(n, n_plus);
+	}
+	
+	free(b);
+}
+
+int main(int argc, char *argv[])
+{
+	
 	std::cout << "Solving problem 1 in homework four - MATH 228B - Winter 2017" << std::endl;
 	IC_ID = 5;
 	while (IC_ID != 0 && IC_ID != 1){
@@ -169,7 +248,7 @@ int main (int argc, char *argv[])
 	double X = 1.0;//length in x-direction
 	
 	
-	double del_x = 1.0;//initial grid spacing 	
+	double del_x = 0.5;//initial grid spacing 	
 	U = new double*[2];//we only need to store two time steps
 	                    //either [n] and [n+(1/2)] or [n+(1/2)] and [n+1]
 
@@ -186,7 +265,10 @@ int main (int argc, char *argv[])
 
 
 	for (size_t ittr = 1; ittr < 15; ittr++){
-		del_x /= 2.0;//each time halve the space step 				
+		del_x /= 2.0;//each time halve the space step 
+
+		if (SCHEME_ID == 3){ del_x = 1.0 / 1000.0; }//jump straight ahead to fine mesh for CN because it is done once 
+
 		double del_t = 0.9*a*del_x;
 
 		size_t n_x = size_t(ceil(X / del_x) + 1); //gird num points 
@@ -207,13 +289,13 @@ int main (int argc, char *argv[])
 
 
 		if (SCHEME_ID == 1){
-			Upwinding(U, 1.0, n_x, del_x, del_t, max_t);
+			Upwinding(U, a, n_x, del_x, del_t, max_t);
 		}
 		else if (SCHEME_ID == 2){
-			LaxWendroff(U, 1.0, n_x, del_x, del_t, max_t);
+			LaxWendroff(U, a, n_x, del_x, del_t, max_t);
 		}
 		else if (SCHEME_ID == 3){
-			CN_like(U, 1.0, n_x, del_x, del_t, max_t);
+			CrankNicolson(U, a, n_x, del_x, del_t, max_t); 
 		}
 		else{
 			std::cout << "Error:: Invalid SHCEME_ID " << std::endl;
@@ -248,6 +330,8 @@ int main (int argc, char *argv[])
 		//clean up for next iteration 
 		delete[] U[0];
 		delete[] U[1];
+
+		if (SCHEME_ID == 3){ break; }//only once for CN
 	}
 	
 	delete[] U;
