@@ -18,7 +18,6 @@ $$
 
 
 \subsection{Solution:} 
-\paragraph{Part 1:}
 Under upwinding scheme, the advection equation is discretized as:
 $$
 \frac{u_{j}^{n+1}-u_{j}^{n}}{\Delta t} + a\frac{u_{j}^{n}-u_{j-1}^{n}}{\Delta x}=0\\
@@ -29,11 +28,11 @@ $$
 \frac{u_{j}^{n+1}-u_{j}^{n}}{\Delta t} + a \frac{u_{j+1}^{n} -u_{j-1}^{n}}{2\Delta x} - a^2\Delta t \frac{u_{n}^{j-1}-2u_{j}^{n}+u_{j+1}^{n}}{2 \Delta x^2}=0\\
 u_{j}^{n+1} = u_{j}^{n} - \frac{a \Delta t}{2\Delta x}(u_{j+1}^{n}-u_{j-1}^{n})+\frac{a^2\Delta t^2}{2\Delta x^2}(u_{j-1}^{n}-2u_{j}^{n}+u_{j+1}^{n})
 $$
-For smooth initial conditions we use $cos(2.0*x*PI) + sin(6.0*x*PI) / 2.0$ as initial conditions which is smooth continuous function for the periodic domain [0,1]. The periodic boundary conditions mean that the value of the last grid point is equal to the value of the first gird point. We can consider this as solving over a circle. 
+For smooth initial conditions, we used $cos(2.0*x*PI) + sin(6.0*x*PI) / 2.0$ as initial conditions which is smooth continuous function for the periodic domain [0,1]. The periodic boundary conditions mean that the value of the last grid point is equal to the value of the first gird point. We can consider this as solving over a circle. 
 
-Since the problem asking for solving such that $\Delta t =0.9a\Delta x$ and $a=1.0$, thus $\nu=0.9$ and the numerical scheme is stable. This applies for upwinding and \protect{\lw}. 
+Since the problem asking for solving such that $\Delta t =0.9a\Delta x$ and $a=1.0$, thus $\nu=0.9$ and the numerical scheme is stable. This applies for upwinding and \protect{\lw} schemes. 
 
-The error was calculated for 1-norm as $||e||_{1} = h\sum_{j}|e_{j}|$, where $e_{j}$ is the absolute difference (error) between the numerical solution and exact solution at grid point $j$. For 2-norm, the error is $||e||_{2} = h \sqrt{\sum_{j}|e_{j}|^2}$. For max-norm, the error becomes $||e||_{max}=max_{j}|e_{j}|$. 
+The error was calculated for 1-norm as $||e||_{1} = h\sum_{j}|e_{j}|$, where $e_{j}$ is the absolute difference (error) between the numerical solution and exact solution at grid point $j$. For 2-norm, the error is $||e||_{2} = \sqrt{h\sum_{j}|e_{j}|^2}$. For max-norm, the error becomes $||e||_{max}=max_{j}|e_{j}|$. 
 
 The exact and numerical solutions for both the smooth and discontinuous initial conditions are shown in Figure \ref{fig:sol}.
 
@@ -51,10 +50,10 @@ The exact and numerical solutions for both the smooth and discontinuous initial 
 \end{figure} 
    
    
+A refinement study is carried out to investigate the rate of convergence. Figure \ref{fig:converge} (end of the report) shows the convergence rate (in log-log scale) in 1-norm, 2-norm and max-norm for continuous and discontinuous initial condition for both upwinding and \protect{\lw} schemes. With continuous initial conditions, the slope of the line for upwinding is 1.2 for continuous initial conditions and 1.85 for \protect{\lw} which indicates that the scheme is first-order accurate and second-order accurate respectively. This is for the three tested norms. For discontinuous data, both method convergences in 1-norm and 2-norm. This is clear from the solution plot in Figure \ref{fig:sol}. For max-norm, non of the two scheme convergence since, for \protect{\lw}, the wiggles moves closer to the discontinuity but it has the same magnitude (Gibbs phenomenon). For upwinding, there is always smearing near the sharp discontinuity which prevents the max-norm from converging. 
    
    
-   
-\begin{figure}[!tbh]
+\begin{figure}[tbh]
  \centering     
    \subfloat [Smooth Upwinding, 1-norm]{\includegraphics[width=0.3\textwidth]{fig/Up_Sm_1norm.pdf}}
    \subfloat [Smooth Upwinding, 2-norm]{\includegraphics[width=0.3\textwidth]{fig/Up_Sm_2norm.pdf}}
@@ -71,6 +70,6 @@ The exact and numerical solutions for both the smooth and discontinuous initial 
    \subfloat [Discont. LW, 1-norm]{\includegraphics[width=0.3\textwidth]{fig/LW_NonSm_1norm.pdf}}
    \subfloat [Discont. LW, 2-norm]{\includegraphics[width=0.3\textwidth]{fig/LW_NonSm_2norm.pdf}}
    \subfloat [Discont. LW, max-norm]{\includegraphics[width=0.3\textwidth]{fig/LW_NonSm_max.pdf}}   
-  \caption{The rate convergence in 1-norm (first column),2-norm (second column) and max-norm (third column) for smooth (first two rows) and discontinuous (last two rows) initial condition using upwinding and \protect{\lw} scheme to solve the 1d advection equation.}
+  \caption{The rate convergence (on log-log scale) in 1-norm (first column),2-norm (second column) and max-norm (third column) for smooth (first two rows) and discontinuous (last two rows) initial condition using upwinding and \protect{\lw} scheme to solve the 1d advection equation.}
    \label{fig:converge}
 \end{figure} 
