@@ -1,0 +1,63 @@
+\section{Problem No.1} \label{sec:prob2}
+\subsection{Problem Description:} 
+In one spatial dimension the linearized equations of acoustics (sound waves) are
+$$
+p_{t} + Ku_{x}=0\\
+\rho u_{t}+p_{x}=0
+$$
+where $u$ is the velocity and $p$ is the pressure, $\rho$ is the density, and $K$ is the bulk modulus.
+\begin{enumerate}
+\item Show that this system is hyperbolic and find the wave speeds.
+\item Write a program to solve this system using \protect{\lw} in original variables on (0,1) using a cell centered grid $x_{j}=(j-\frac{1}{2})\Delta x$ for $j=1...N.$ Write the code to use ghost cells, so that different boundary conditions can be changed by simply changing the values in the ghost cells. Ghost cells are cells outside the domain whore values can be set at the beginning of a time step so that code for updating cells adjacent to the boundary is identical to the code for interior cells.
+Set the ghost cells at the left by 
+$$
+p_{0}^{n}=p_{1}^{n}\\
+u_{0}^{n}=-u_{1}^{n}
+$$
+and set the ghost cells on the right by
+$$
+p_{N+1}^{n} = \frac{1}{2}(p_{N}^{n}+u_{N}^{n}\sqrt{K\rho})\\
+u_{N+1}^{n} = \frac{1}{2}(\frac{p_{N}^{n}}{\sqrt{K\rho}} + u_{N}^{n})
+$$
+Run simulations with different initial conditions. Explain what happens at the left and right boundaries. 
+\item Give a physical interpretation and a mathematical explanation of these boundary conditions
+
+\end{enumerate}
+
+
+
+
+\subsection{Solution:} 
+\paragraph{Part 1:} To prove that the system in hyperbolic, we start by writing the system of equation in matrix. Thus,
+
+$$
+q_{t} + A q_{x}=0
+$$
+
+\begin{bmatrix} 
+p\\
+u
+\end{bmatrix}_{t}
++
+\begin{bmatrix} 
+0 & K\\
+1/\rho & 0
+\end{bmatrix}
+\begin{bmatrix} 
+p\\
+u
+\end{bmatrix}_{x}
+=
+\begin{bmatrix} 
+0\\
+0
+\end{bmatrix}
+
+For the above system, we need to prove that $A$ is diagonalizable and  its eigenvalues are real and distinct (strictly hyperbolic). Since the transpose of $A$ is a diagonal matrix, then $A$ is diagonalizable. The eigenvalues of $A$ can be obtain by solving the following 
+$$
+Det(A-\lambda I)=0\\
+\lambda^{2}=\frac{K}{\rho}
+\lambda_{1,2} = \pm \sqrt{\frac{K}{\rho}}
+$$
+
+$K$ is the bulk modulus which measure how incompressible a substance is which always positive (ration of infinitesimal pressure increase to resulting relative decrease in volume). $\rho$ is density which always positive. Thus, the $\lambda$ is real and distinct which makes the eigenvalues of $A$ real and distinct. Thus, the system is (strictly) hyperbolic. 
