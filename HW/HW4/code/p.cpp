@@ -95,7 +95,7 @@ void LaxWendroff(double**U, double a, size_t n_x, double del_x, double del_t, si
 	double courant = a*del_t / del_x;
 	
 	if (courant>1.0){
-		std::cout << "Error (0) at Upwinding()::WARNING::Courant Number >1.0 and the scheme is unstable now!!!" << std::endl;
+		std::cout << "Error (0) at LaxWendroff()::WARNING::Courant Number >1.0 and the scheme is unstable now!!!" << std::endl;
 		system("pause");
 	}
 	size_t n_plus = 1;
