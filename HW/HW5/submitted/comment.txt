@@ -1,0 +1,1 @@
+Question 1: Part a: Show hyperbolic: Y Wave speed: Not explicit Part b: Code w/ output: OK Behavior: OK Part c: Physical interpretation: OK Mathematical explanation: Not stated Question 2: Implementation: Output for wave packet: OK Output for Smooth low freq: OK Output for Step: OK Discussion: Reasonable argument
